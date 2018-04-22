@@ -1,4 +1,5 @@
 from __future__ import division
+from sklearn import preprocessing
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -57,7 +58,7 @@ def logistic(x, y, iter = 100, alpha=0.0001):
 
 
 #Loading the dataset with pandas
-dataset = pd.read_csv("myData.csv")
+dataset = pd.read_csv("gitdata.csv")
 
 #Adiciona uma coluna de 1's ao Dataframe
 n_rows, n_columns = dataset.shape
@@ -66,12 +67,15 @@ dataset.insert(loc=0, column="COO", value=np.ones(n_rows)) #coo : Column Of Ones
 X = dataset.loc[:, dataset.columns != 'y'].values
 Y = dataset['y'].values
 
+###Preprocessing
+min_max_scaler = preprocessing.MinMaxScaler(feature_range=(-5, 5))
+X = min_max_scaler.fit_transform(X)
 
 ####TRAINING
 
-n = 6
-predictor = logistic(X[:n, :], Y[:n], iter=10000, alpha=0.1)
-
+n = 80
+predictor = logistic(X[:n, :], Y[:n], iter=1000, alpha=0.1)
+print(predictor)
 print('PREDICAO:')
-for i in range(8):
+for i in range(100):
     print(predict(predictor, X[i, :]))
